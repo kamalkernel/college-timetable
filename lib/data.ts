@@ -162,6 +162,7 @@ export const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"
 // Update this list when the college publishes holidays.
 // These dates do not consume a day order; the same day order moves to the next working day.
 export const HOLIDAYS: string[] = [
+  "2026-08-24",
   "2026-08-26",
   "2026-09-04",
   "2026-09-14",

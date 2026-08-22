@@ -3,7 +3,7 @@
 import { DAY_ORDERS, DayOrder } from "@/lib/data";
 
 interface Props {
-  active: DayOrder;
+  active: DayOrder | null;
   today: DayOrder | null;
   onChange: (day: DayOrder) => void;
 }

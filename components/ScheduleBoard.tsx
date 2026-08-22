@@ -156,7 +156,7 @@ export default function ScheduleBoard() {
           </div>
 
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-board-mist/70">Day order</p>
-          <DayTabs active={day} today={selectedDayOrder} onChange={handleDayChange} />
+          <DayTabs active={selectedDayOrder ? day : null} today={selectedDayOrder} onChange={handleDayChange} />
 
           <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-board-mist/70">Selected loadout</p>
@@ -205,7 +205,7 @@ export default function ScheduleBoard() {
             <Legend />
           </div>
 
-          <WeekGlance activeDay={day} onSelect={handleDayChange} />
+          <WeekGlance activeDay={selectedDayOrder ? day : null} onSelect={handleDayChange} />
         </div>
       </section>
     </div>
@@ -253,7 +253,7 @@ function StatusCard({ icon, label, value }: { icon: React.ReactNode; label: stri
   );
 }
 
-function WeekGlance({ activeDay, onSelect }: { activeDay: DayOrder; onSelect: (d: DayOrder) => void }) {
+function WeekGlance({ activeDay, onSelect }: { activeDay: DayOrder | null; onSelect: (d: DayOrder) => void }) {
   return (
     <div className="mt-10 hidden md:block">
       <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-board-mist/70">Week at a glance</p>
