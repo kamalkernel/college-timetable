@@ -1,6 +1,6 @@
 export type SessionType = "Lecture" | "Lab";
 
-export type SubjectKey = "BTB" | "MEE" | "CYB" | "CSE" | "MAB";
+export type SubjectKey = "BTB" | "MEE" | "CYB" | "CSE" | "MAB" | "LAN";
 
 export interface Course {
   key: SubjectKey;
@@ -65,6 +65,15 @@ export const COURSES: Record<SubjectKey, Course> = {
     name: "Calculus and Linear Algebra",
     credits: 4,
     accent: "violet",
+  },
+  LAN: {
+    key: "LAN",
+    code: "26LCA1005J",
+    // Students may take different language electives in this slot.
+    // Keep the schedule neutral rather than naming one language.
+    name: "Language",
+    credits: 3,
+    accent: "amber",
   },
 };
 
@@ -137,6 +146,16 @@ export const SESSIONS: Record<SubjectKey, Partial<Record<SessionType, Session>>>
       room: "618",
     },
   },
+  LAN: {
+    Lecture: {
+      faculty: "Language faculty",
+      facultyId: "",
+      location: "",
+      building: "Language classroom",
+      floor: "",
+      room: "",
+    },
+  },
 };
 
 export const PERIODS: Period[] = [
@@ -186,8 +205,8 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     null,
     null,
     null,
-    null,
-    null,
+    { subject: "LAN", type: "Lecture" },
+    { subject: "LAN", type: "Lecture" },
     { subject: "BTB", type: "Lecture" },
     null,
     null,
@@ -243,7 +262,7 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     { subject: "CSE", type: "Lecture" },
     { subject: "CSE", type: "Lecture" },
     null,
-    null,
+    { subject: "LAN", type: "Lecture" },
     { subject: "MAB", type: "Lecture" },
     null,
     null,
