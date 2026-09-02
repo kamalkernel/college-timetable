@@ -222,7 +222,7 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     { subject: "MEE", type: "Lab" },
     { subject: "MEE", type: "Lab" },
     { subject: "MEE", type: "Lab" },
-    null,
+    { subject: "LAN", type: "Lecture" },
     null,
   ],
   3: [
@@ -250,7 +250,7 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     null,
     null,
     null,
-    null,
+    { subject: "LAN", type: "Lecture" },
     null,
   ],
   5: [
