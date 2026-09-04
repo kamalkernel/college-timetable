@@ -24,6 +24,7 @@ import { AirplaneDecorations } from "./AirplaneDecorations";
 import { FlightWaypointBanner } from "./FlightWaypointBanner";
 import BoardingPassCard from "./BoardingPassCard";
 import { AirshowFlyby } from "./AirshowFlyby";
+import FullTimetable from "./FullTimetable";
 
 const DAY_LABELS: Record<DayOrder, string> = {
   1: "MON",
@@ -63,6 +64,7 @@ export default function ScheduleBoard() {
   const [hasManualSelection, setHasManualSelection] = useState(false);
   const [skyTheme, setSkyTheme] = useState<"day" | "sunset" | "night">("day");
   const [isFlybyActive, setIsFlybyActive] = useState(false);
+  const [view, setView] = useState<"day" | "full">("day");
 
   useEffect(() => {
     const initialDate = new Date();
@@ -332,12 +334,16 @@ export default function ScheduleBoard() {
 
             {/* Transparent Day Order Tabs */}
             <div className="pt-0.5">
-              <DayTabs active={activeDay} today={selectedDayOrder} onChange={handleDayChange} />
+              <DayTabs active={activeDay} today={selectedDayOrder} view={view} onChange={handleDayChange} onViewChange={setView} />
             </div>
 
             {/* Class Cards List for Active Day */}
             <div className="bg-white/85 backdrop-blur-md border-2 border-black rounded-b-xl rounded-tr-xl p-3 sm:p-4 shadow-2xl">
               
+              {view === "full" ? (
+                <FullTimetable />
+              ) : (
+                <>
               <div className="flex items-center justify-between pb-2 mb-3 border-b-2 border-black">
                 <div className="flex items-center gap-1.5">
                   <h2 className="text-xs sm:text-sm font-black text-slate-950 uppercase tracking-tight">
@@ -436,8 +442,12 @@ export default function ScheduleBoard() {
                   nextSlot={nextPeriodIndex >= 0 ? rows[nextPeriodIndex] : null}
                   nextPeriod={nextPeriodIndex >= 0 ? PERIODS[nextPeriodIndex] : null}
                   dayOrder={selectedDayOrder}
+                  isHoliday={!selectedDayOrder}
                 />
               </div>
+
+                </>
+              )}
 
               {/* Course Directory / Legend */}
               <div className="mt-4">

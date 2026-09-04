@@ -8,9 +8,21 @@ interface Props {
   nextSlot: ClassSlot | null;
   nextPeriod: Period | null;
   dayOrder: number | null;
+  isHoliday: boolean;
 }
 
-export default function BoardingPassCard({ currentSlot, currentPeriod, nextSlot, nextPeriod, dayOrder }: Props) {
+export default function BoardingPassCard({ currentSlot, currentPeriod, nextSlot, nextPeriod, dayOrder, isHoliday }: Props) {
+  if (isHoliday) {
+    return (
+      <div className="bg-[#fef9c3] border-2 border-black rounded-lg p-3 sm:p-4 shadow-[3px_3px_0px_#000] text-slate-900">
+        <div className="flex items-center gap-2 font-black text-sm uppercase tracking-wider">
+          <span className="text-lg">☀️</span>
+          <span>Today is a holiday</span>
+        </div>
+      </div>
+    );
+  }
+
   const activeSlot = currentSlot || nextSlot;
   const activePeriod = currentPeriod || nextPeriod;
   const isCurrent = Boolean(currentSlot);
