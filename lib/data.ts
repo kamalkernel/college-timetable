@@ -30,6 +30,16 @@ export interface ClassSlot {
   type: SessionType;
 }
 
+export interface GroupedClass {
+  id: string;
+  subject: SubjectKey;
+  type: SessionType;
+  startPeriod: number;
+  endPeriod: number;
+  startTime: string;
+  endTime: string;
+}
+
 export const COURSES: Record<SubjectKey, Course> = {
   BTB: {
     key: "BTB",
@@ -69,8 +79,6 @@ export const COURSES: Record<SubjectKey, Course> = {
   LAN: {
     key: "LAN",
     code: "26LCA1005J",
-    // Students may take different language electives in this slot.
-    // Keep the schedule neutral rather than naming one language.
     name: "Language",
     credits: 3,
     accent: "amber",
@@ -160,7 +168,7 @@ export const SESSIONS: Record<SubjectKey, Partial<Record<SessionType, Session>>>
       location: "",
       building: "Language classroom",
       floor: "",
-      room: "",
+      room: "618",
     },
   },
   GNN: {
@@ -170,7 +178,7 @@ export const SESSIONS: Record<SubjectKey, Partial<Record<SessionType, Session>>>
       location: "",
       building: "Venue details pending",
       floor: "",
-      room: "",
+      room: "TBA",
     },
   },
 };
@@ -195,8 +203,6 @@ export type DayOrder = (typeof DAY_ORDERS)[number];
 
 export const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
 
-// Update this list when the college publishes holidays.
-// These dates do not consume a day order; the same day order moves to the next working day.
 export const HOLIDAYS: string[] = [
   "2026-08-24",
   "2026-08-26",
@@ -251,9 +257,9 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     null,
     null,
     null,
+    null,
     { subject: "MAB", type: "Lecture" },
     { subject: "CYB", type: "Lab" },
-    null,
     null,
   ],
   4: [
@@ -285,6 +291,51 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     null,
   ],
 };
+
+export function getGroupedClasses(day: DayOrder): GroupedClass[] {
+  const rows = TIMETABLE[day];
+  const list: GroupedClass[] = [];
+  let current: {
+    subject: SubjectKey;
+    type: SessionType;
+    startPeriod: number;
+    endPeriod: number;
+    startTime: string;
+    endTime: string;
+  } | null = null;
+
+  for (let i = 0; i < rows.length; i++) {
+    const slot = rows[i];
+    const period = PERIODS[i];
+    if (slot) {
+      if (current && current.subject === slot.subject && current.type === slot.type) {
+        current.endPeriod = period.n;
+        current.endTime = period.to;
+      } else {
+        if (current) {
+          list.push({ ...current, id: `${day}-${current.startPeriod}-${current.subject}` });
+        }
+        current = {
+          subject: slot.subject,
+          type: slot.type,
+          startPeriod: period.n,
+          endPeriod: period.n,
+          startTime: period.from,
+          endTime: period.to,
+        };
+      }
+    } else {
+      if (current) {
+        list.push({ ...current, id: `${day}-${current.startPeriod}-${current.subject}` });
+        current = null;
+      }
+    }
+  }
+  if (current) {
+    list.push({ ...current, id: `${day}-${current.startPeriod}-${current.subject}` });
+  }
+  return list;
+}
 
 export function to12Hour(time: string): string {
   const [hStr, m] = time.split(":");
@@ -351,14 +402,12 @@ function countWorkingDaysBetween(start: Date, end: Date): number {
   const direction = start <= end ? 1 : -1;
   let cursor = addDays(start, direction);
   let count = 0;
-
   while ((direction === 1 && cursor <= end) || (direction === -1 && cursor >= end)) {
     if (isWorkingDay(cursor)) {
       count += direction;
     }
     cursor = addDays(cursor, direction);
   }
-
   return count;
 }
 
@@ -366,7 +415,6 @@ export function getDayOrderForDate(date: Date): DayOrder | null {
   if (!isWorkingDay(date)) {
     return null;
   }
-
   const anchor = parseDateKey(DAY_ORDER_ANCHOR.date);
   const steps = countWorkingDaysBetween(anchor, date);
   return shiftDayOrder(DAY_ORDER_ANCHOR.dayOrder, steps);
@@ -374,11 +422,9 @@ export function getDayOrderForDate(date: Date): DayOrder | null {
 
 export function getNextWorkingDay(from: Date): { date: Date; dayOrder: DayOrder } {
   let cursor = addDays(from, 1);
-
   while (!isWorkingDay(cursor)) {
     cursor = addDays(cursor, 1);
   }
-
   return {
     date: cursor,
     dayOrder: getDayOrderForDate(cursor) ?? DAY_ORDER_ANCHOR.dayOrder,

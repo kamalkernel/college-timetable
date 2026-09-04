@@ -15,20 +15,22 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Class Board · Batch 2 Timetable",
-  description: "Day-order timetable with subject, teacher and venue for every period.",
+  title: "COLLEGE TIMETABLE ✈️",
+  description: "Academic schedule dashboard featuring Day Order tracking, lecture details, faculty venues, and 2D aviation themes.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070A12",
+  themeColor: "#1c3a6b",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${body.variable} ${mono.variable}`}>
-      <body className="bg-ink font-sans text-board-paper antialiased">{children}</body>
+      <body className="font-sans antialiased text-slate-900 selection:bg-blue-600 selection:text-white">
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,45 +1,7 @@
 "use client";
 
-import { BookOpen, FlaskConical, MapPin, User } from "lucide-react";
-import { ClassSlot, COURSES, Period, getSession, to12Hour } from "@/lib/data";
-
-const ACCENTS: Record<string, { text: string; bg: string; border: string; dot: string; glow: string }> = {
-  amber: {
-    text: "text-board-amber",
-    bg: "bg-board-amber/10",
-    border: "border-board-amber/35",
-    dot: "bg-board-amber",
-    glow: "from-board-amber/25",
-  },
-  teal: {
-    text: "text-board-teal",
-    bg: "bg-board-teal/10",
-    border: "border-board-teal/35",
-    dot: "bg-board-teal",
-    glow: "from-board-teal/25",
-  },
-  rose: {
-    text: "text-board-rose",
-    bg: "bg-board-rose/10",
-    border: "border-board-rose/35",
-    dot: "bg-board-rose",
-    glow: "from-board-rose/25",
-  },
-  sky: {
-    text: "text-board-sky",
-    bg: "bg-board-sky/10",
-    border: "border-board-sky/35",
-    dot: "bg-board-sky",
-    glow: "from-board-sky/25",
-  },
-  violet: {
-    text: "text-board-violet",
-    bg: "bg-board-violet/10",
-    border: "border-board-violet/35",
-    dot: "bg-board-violet",
-    glow: "from-board-violet/25",
-  },
-};
+import { BookOpen, FlaskConical, MapPin, User, Clock } from "lucide-react";
+import { ClassSlot, COURSES, Period, getSession } from "@/lib/data";
 
 interface Props {
   period: Period;
@@ -47,21 +9,62 @@ interface Props {
   isNow: boolean;
 }
 
+const ACCENT_STYLES: Record<string, { bg: string; border: string; badge: string; text: string }> = {
+  amber: {
+    bg: "bg-amber-50/70",
+    border: "border-amber-600",
+    badge: "bg-amber-100 text-amber-900 border-amber-300",
+    text: "text-amber-950",
+  },
+  teal: {
+    bg: "bg-teal-50/70",
+    border: "border-teal-600",
+    badge: "bg-teal-100 text-teal-900 border-teal-300",
+    text: "text-teal-950",
+  },
+  rose: {
+    bg: "bg-rose-50/70",
+    border: "border-rose-600",
+    badge: "bg-rose-100 text-rose-900 border-rose-300",
+    text: "text-rose-950",
+  },
+  sky: {
+    bg: "bg-sky-50/70",
+    border: "border-sky-600",
+    badge: "bg-sky-100 text-sky-900 border-sky-300",
+    text: "text-sky-950",
+  },
+  violet: {
+    bg: "bg-purple-50/70",
+    border: "border-purple-600",
+    badge: "bg-purple-100 text-purple-900 border-purple-300",
+    text: "text-purple-950",
+  },
+};
+
 export default function PeriodRow({ period, slot, isNow }: Props) {
   if (!slot) {
     return (
       <div
-        className={`group relative overflow-hidden rounded-[1.35rem] border border-dashed border-white/10 bg-white/[0.025] px-4 py-4 backdrop-blur transition-all sm:px-5 ${
-          isNow ? "border-board-teal/50 ring-1 ring-board-teal/40" : "hover:border-white/20"
+        className={`relative overflow-hidden rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/60 p-3.5 transition-all ${
+          isNow ? "border-amber-500 bg-amber-50/50 ring-2 ring-amber-400" : ""
         }`}
       >
-        <div className="flex items-center gap-4">
-          <TimeColumn period={period} muted />
-          <div className="min-w-0 flex-1">
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-board-mist/50">Idle slot</p>
-            <p className="text-sm italic text-board-mist/75">Free period</p>
+        <div className="flex flex-wrap items-center justify-between gap-2 text-slate-500">
+          <div className="flex items-center gap-2 font-mono text-xs font-bold">
+            <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded border border-slate-300">
+              Period {period.n}
+            </span>
+            <span>{period.from} - {period.to}</span>
           </div>
-          {isNow && <NowBadge />}
+          <div className="flex items-center gap-2">
+            <span className="text-xs italic text-slate-400 font-medium">Free Period / Recess</span>
+            {isNow && (
+              <span className="bg-amber-300 text-black border border-black px-2 py-0.5 rounded text-[10px] font-extrabold animate-pulse">
+                ACTIVE NOW
+              </span>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -69,73 +72,77 @@ export default function PeriodRow({ period, slot, isNow }: Props) {
 
   const course = COURSES[slot.subject];
   const session = getSession(slot.subject, slot.type);
-  const a = ACCENTS[course.accent];
+  const accent = ACCENT_STYLES[course.accent] || ACCENT_STYLES.sky;
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-[1.35rem] border ${a.border} bg-ink-panel/80 px-4 py-4 shadow-board backdrop-blur transition-all hover:-translate-y-0.5 hover:border-white/20 sm:px-5 ${
-        isNow ? `animate-pulse-glow ring-2 ring-current ${a.text}` : ""
+      className={`relative overflow-hidden rounded-lg border-2 border-black p-3.5 sm:p-4 bg-white retro-card-shadow-sm transition-all hover:-translate-y-0.5 ${
+        isNow ? "ring-4 ring-amber-400 border-black bg-amber-50/40" : ""
       }`}
     >
-      <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${a.glow} via-white/40 to-transparent`} />
-      <div className={`absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br ${a.glow} to-transparent blur-2xl`} />
-
-      <div className="relative flex items-start gap-4">
-        <TimeColumn period={period} />
-
-        <div className="min-w-0 flex-1">
-          <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className={`h-2.5 w-2.5 rounded-full ${a.dot} shadow-[0_0_18px_currentColor]`} />
-            <h3 className={`text-base font-extrabold tracking-tight sm:text-lg ${a.text}`}>{course.name}</h3>
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-wide ${a.text} ${a.bg} border ${a.border}`}
-            >
-              {slot.type === "Lab" ? <FlaskConical size={10} /> : <BookOpen size={10} />}
-              {slot.type}
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-board-mist">
-              {course.code}
-            </span>
-          </div>
-
-          <div className="grid gap-2 text-xs text-board-mist sm:grid-cols-2">
-            <span className="flex min-w-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-              <User size={13} className="shrink-0 text-board-mist/70" />
-              <span className="truncate">{session.faculty}</span>
-            </span>
-            <span className="flex min-w-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-              <MapPin size={13} className="shrink-0 text-board-mist/70" />
-              <span className="truncate">
-                {session.building} · {session.floor} · {session.room}
-              </span>
-            </span>
-          </div>
+      {/* Top Header: Period, Timing, Status Badge */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs font-extrabold bg-blue-900 text-white px-2 py-0.5 rounded border border-black">
+            P{period.n}
+          </span>
+          <span className="font-mono text-xs font-bold text-slate-700 flex items-center gap-1">
+            <Clock size={12} className="text-slate-500" />
+            {period.from} - {period.to}
+          </span>
         </div>
 
-        {isNow && <NowBadge />}
+        <div className="flex items-center gap-1.5">
+          <span
+            className={`inline-flex items-center gap-1 rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase border ${accent.badge}`}
+          >
+            {slot.type === "Lab" ? <FlaskConical size={10} /> : <BookOpen size={10} />}
+            {slot.type}
+          </span>
+
+          {isNow ? (
+            <span className="bg-amber-400 text-black border border-black px-2 py-0.5 rounded text-[10px] font-black animate-pulse flex items-center gap-1">
+              <span>✈️</span> BOARDING NOW
+            </span>
+          ) : (
+            <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded text-[10px] font-extrabold">
+              ON SCHEDULE
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Main Course Details */}
+      <div className="mb-3">
+        <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
+          {course.name}
+        </h3>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-200">
+            {course.code}
+          </span>
+          <span className="text-xs text-slate-500 font-medium">
+            {course.credits} Credits
+          </span>
+        </div>
+      </div>
+
+      {/* Footer Details: Gate / Venue & Faculty Pilot */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-200 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+          <MapPin size={13} className="text-red-500 shrink-0" />
+          <span>
+            Gate: <strong className="text-slate-900 font-bold">{session?.room || "TBA"}</strong> ({session?.building || "University Campus"} · {session?.floor || "Floor"})
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+          <User size={13} className="text-blue-600 shrink-0" />
+          <span>
+            Faculty: <strong className="text-slate-900 font-bold">{session?.faculty || "Instructor"}</strong>
+          </span>
+        </div>
       </div>
     </div>
-  );
-}
-
-function TimeColumn({ period, muted }: { period: Period; muted?: boolean }) {
-  return (
-    <div
-      className={`w-20 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-3 py-2 font-mono text-xs leading-tight sm:w-24 ${
-        muted ? "text-board-mist/45" : "text-board-paper"
-      }`}
-    >
-      <div className="text-[10px] uppercase tracking-[0.2em] text-board-mist/60">P{period.n}</div>
-      <div className="mt-1">{to12Hour(period.from)}</div>
-      <div className="opacity-55">{to12Hour(period.to)}</div>
-    </div>
-  );
-}
-
-function NowBadge() {
-  return (
-    <span className="ml-auto hidden shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-emerald-300 sm:inline-flex">
-      Now
-    </span>
   );
 }

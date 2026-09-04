@@ -3,41 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --grid-line: rgba(148, 163, 184, 0.08);
+  --grid-line: rgba(255, 255, 255, 0.05);
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light dark;
 }
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 12% -10%, rgba(45, 212, 191, 0.2), transparent 32rem),
-    radial-gradient(circle at 82% 4%, rgba(167, 139, 250, 0.2), transparent 34rem),
-    radial-gradient(circle at 46% 102%, rgba(245, 165, 36, 0.14), transparent 26rem),
-    linear-gradient(135deg, #070a12 0%, #0d1322 44%, #0a0f1c 100%);
+  background-color: #1e293b;
+  background-image: 
+    radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.12), transparent 45rem),
+    radial-gradient(circle at 10% 90%, rgba(249, 115, 22, 0.08), transparent 35rem),
+    linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  background-attachment: fixed;
 }
 
-body::before {
-  pointer-events: none;
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(to bottom, black, transparent 78%);
+/* Retro OS borders & bevels */
+.retro-window-border {
+  box-shadow: inset -2px -2px 0px #4b5563, inset 2px 2px 0px #ffffff, 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
-body::after {
-  pointer-events: none;
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.035) 48%, transparent 52%);
-  opacity: 0.5;
+.retro-btn {
+  box-shadow: inset -2px -2px 0px #000000, inset 2px 2px 0px #ffffff;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+
+.retro-btn:active {
+  box-shadow: inset 2px 2px 0px #000000, inset -2px -2px 0px #ffffff;
+  transform: translate(1px, 1px);
+}
+
+.retro-inset {
+  box-shadow: inset 2px 2px 0px #6b7280, inset -1px -1px 0px #ffffff;
+}
+
+.retro-card-shadow {
+  box-shadow: 3px 3px 0px 0px #000000;
+}
+
+.retro-card-shadow-sm {
+  box-shadow: 2px 2px 0px 0px #000000;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -52,14 +59,21 @@ body::after {
 }
 
 ::selection {
-  background: rgba(45, 212, 191, 0.35);
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #dcdfe4;
+  border: 1px solid #000000;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #2dd4bf, #a78bfa);
-  border-radius: 999px;
+  background: #9ca3af;
+  border: 1px solid #000000;
 }

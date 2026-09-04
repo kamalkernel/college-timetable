@@ -8,9 +8,17 @@ interface Props {
   onChange: (day: DayOrder) => void;
 }
 
+const DAY_LABELS: Record<DayOrder, string> = {
+  1: "MON",
+  2: "TUE",
+  3: "WED",
+  4: "THU",
+  5: "FRI",
+};
+
 export default function DayTabs({ active, today, onChange }: Props) {
   return (
-    <div role="tablist" aria-label="Select day order" className="grid grid-cols-5 gap-2 lg:grid-cols-1">
+    <div role="tablist" aria-label="Select day order" className="grid grid-cols-5 gap-1 sm:gap-2">
       {DAY_ORDERS.map((day) => {
         const isActive = day === active;
         const isToday = day === today;
@@ -21,17 +29,29 @@ export default function DayTabs({ active, today, onChange }: Props) {
             role="tab"
             aria-selected={isActive}
             onClick={() => onChange(day)}
-            className={`group relative overflow-hidden rounded-2xl border px-3 py-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-board-teal/70 ${
+            className={`group relative text-center border-2 border-black rounded-t-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 py-2 sm:py-2.5 px-1 sm:px-3 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 ${
               isActive
-                ? "border-board-teal/70 bg-board-teal/15 text-board-paper shadow-glow"
-                : "border-white/10 bg-white/[0.035] text-board-mist hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.06] hover:text-board-paper"
+                ? "bg-white/95 text-blue-950 -mb-[2px] z-20 shadow-md font-black backdrop-blur-sm border-b-0"
+                : "bg-white/25 hover:bg-white/40 text-slate-900 font-bold backdrop-blur-sm z-10"
             }`}
           >
-            <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-            <span className="block font-mono text-[10px] uppercase tracking-[0.22em] opacity-70">Order</span>
-            <span className="mt-1 block text-lg font-black tracking-tight">Day {day}</span>
+            <div className="flex items-center gap-1">
+              {isActive && <span className="text-blue-600 text-xs sm:text-sm">✈️</span>}
+              <span className="text-xs sm:text-sm tracking-tight font-extrabold">Day {day}</span>
+            </div>
+
+            <span
+              className={`text-[9px] sm:text-[10px] px-1 py-0.2 rounded font-mono font-bold uppercase ${
+                isActive
+                  ? "bg-blue-100 text-blue-900 border border-blue-300"
+                  : "bg-black/10 text-slate-900"
+              }`}
+            >
+              {DAY_LABELS[day]}
+            </span>
+
             {isToday && (
-              <span className="mt-2 inline-flex rounded-full border border-board-amber/30 bg-board-amber/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-board-amber">
+              <span className="hidden md:inline-flex rounded bg-amber-400 border border-black px-1 text-[8px] uppercase font-black text-black">
                 Today
               </span>
             )}
