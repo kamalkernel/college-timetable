@@ -1,6 +1,6 @@
 export type SessionType = "Lecture" | "Lab";
 
-export type SubjectKey = "BTB" | "MEE" | "CYB" | "CSE" | "MAB" | "LAN";
+export type SubjectKey = "BTB" | "MEE" | "CYB" | "CSE" | "MAB" | "LAN" | "GNN";
 
 export interface Course {
   key: SubjectKey;
@@ -74,6 +74,13 @@ export const COURSES: Record<SubjectKey, Course> = {
     name: "Language",
     credits: 3,
     accent: "amber",
+  },
+  GNN: {
+    key: "GNN",
+    code: "26GNN1004L",
+    name: "External Course",
+    credits: 0,
+    accent: "violet",
   },
 };
 
@@ -156,6 +163,16 @@ export const SESSIONS: Record<SubjectKey, Partial<Record<SessionType, Session>>>
       room: "",
     },
   },
+  GNN: {
+    Lab: {
+      faculty: "Faculty details pending",
+      facultyId: "",
+      location: "",
+      building: "Venue details pending",
+      floor: "",
+      room: "",
+    },
+  },
 };
 
 export const PERIODS: Period[] = [
@@ -226,10 +243,10 @@ export const TIMETABLE: Record<DayOrder, (ClassSlot | null)[]> = {
     null,
   ],
   3: [
-    null,
-    null,
-    null,
-    null,
+    { subject: "GNN", type: "Lab" },
+    { subject: "GNN", type: "Lab" },
+    { subject: "GNN", type: "Lab" },
+    { subject: "GNN", type: "Lab" },
     null,
     null,
     null,
